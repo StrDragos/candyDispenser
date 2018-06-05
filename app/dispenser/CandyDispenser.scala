@@ -2,7 +2,7 @@ package dispenser
 
 import akka.actor.{FSM, Props}
 import dispenser.CandyDispenser._
-import dispenser.DispenserProtocol.{InsertCoin, Response, RotateKnob}
+import dispenser.DispenserProtocol._
 
 import scala.concurrent.duration._
 import scala.util.Random
@@ -14,11 +14,11 @@ object CandyDispenser {
 
   sealed trait DispenserState
 
+  private[dispenser] case class DispenserData(numberOfCandies: Int, coins: Int = 0)
+
   case object Locked extends DispenserState
 
   case object Unlocked extends DispenserState
-
-  private[dispenser] case class DispenserData(numberOfCandies: Int, coins: Int = 0)
 
 }
 
@@ -31,22 +31,24 @@ private[dispenser] class CandyDispenser(refillTime: FiniteDuration = 30 minutes)
   when(Locked, refillTime) {
     case Event(InsertCoin, data@DispenserData(candies, insertedCoins)) if candies > 0 =>
       val newState = data.copy(coins = insertedCoins + 1)
-      sender ! Response(candies, newState.coins)
+      sender ! InputResponse(candies, newState.coins)
       goto(Unlocked) using newState
-
-    case Event(StateTimeout, data) =>
-      stay using data.copy(numberOfCandies = initialLoad)
-
   }
 
   when(Unlocked, refillTime) {
     case Event(RotateKnob, data@DispenserData(candies, coins)) if candies > 0 =>
       val newState = data.copy(numberOfCandies = candies - 1)
-      sender ! Response(newState.numberOfCandies, coins)
+      sender ! InputResponse(newState.numberOfCandies, coins)
       goto(Locked) using newState
+  }
 
-    case Event(StateTimeout, data) =>
-      stay using data.copy(numberOfCandies = initialLoad)
+  whenUnhandled {
+    case Event(GetInventory, data) =>
+      sender ! Inventory(data.numberOfCandies)
+      stay
+
+    case Event(StateTimeout, data) => stay using data.copy(numberOfCandies = initialLoad)
+
   }
 
   initialize()

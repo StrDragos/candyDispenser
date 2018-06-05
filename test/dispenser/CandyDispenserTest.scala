@@ -3,7 +3,7 @@ package dispenser
 import akka.actor.ActorSystem
 import akka.testkit.{ImplicitSender, TestFSMRef, TestKit}
 import dispenser.CandyDispenser.{DispenserData, Locked, Unlocked}
-import dispenser.DispenserProtocol.{InsertCoin, Response, RotateKnob}
+import dispenser.DispenserProtocol._
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Matchers, WordSpecLike}
 
 import scala.concurrent.duration._
@@ -25,7 +25,7 @@ class CandyDispenserTest extends TestKit(ActorSystem("test"))
       actor.setState(Locked, DispenserData(10, 0))
       actor ! InsertCoin
       actor.stateName shouldBe Unlocked
-      expectMsg(Response(10, 1))
+      expectMsg(InputResponse(10, 1))
     }
 
     "not change state or accumulate coins if in Unlocked" in new TestContext() {
@@ -40,7 +40,7 @@ class CandyDispenserTest extends TestKit(ActorSystem("test"))
       actor.setState(Unlocked, DispenserData(10, 1))
       actor ! RotateKnob
       actor.stateName shouldBe Locked
-      expectMsg(Response(9, 1))
+      expectMsg(InputResponse(9, 1))
     }
 
     "not give candy if in locked state and the knob is turned" in new TestContext() {
@@ -60,6 +60,11 @@ class CandyDispenserTest extends TestKit(ActorSystem("test"))
       actor.setState(Locked, DispenserData(0, 1))
       awaitCond(actor.stateData.numberOfCandies > 0, 11 seconds , 5 seconds)
       actor.stateName shouldBe Locked
+    }
+
+    "get inventory" in new TestContext(){
+      actor ! GetInventory
+      expectMsg(Inventory(actor.stateData.numberOfCandies))
     }
   }
 

@@ -4,7 +4,10 @@
 # ~~~~
 
 +nocsrf
-POST        /dispenser/insert-coin        controllers.CandyDispenser.inputCoin
+POST        /dispenser/insert-coin        controllers.CandyDispenserApi.inputCoin
 
 +nocsrf
-POST        /dispenser/rotate-knob        controllers.CandyDispenser.rotateKnob
+POST        /dispenser/rotate-knob        controllers.CandyDispenserApi.rotateKnob
+
++nocsrf
+GET         /dispenser/inventory           controllers.CandyDispenserApi.askInventory
