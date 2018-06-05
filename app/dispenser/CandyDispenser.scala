@@ -10,7 +10,7 @@ import scala.util.Random
 object CandyDispenser {
   val name = "candy-dispenser"
 
-  def props: Props = Props(new CandyDispenser(Random.nextInt(Integer.MAX_VALUE)))
+  def props: Props = Props(new CandyDispenser())
 
   sealed trait DispenserState
 
@@ -22,8 +22,9 @@ object CandyDispenser {
 
 }
 
-private[dispenser] class CandyDispenser(initialLoad: Int, refillTime: FiniteDuration = 30 minutes) extends FSM[DispenserState, DispenserData] {
+private[dispenser] class CandyDispenser(refillTime: FiniteDuration = 30 minutes) extends FSM[DispenserState, DispenserData] {
 
+  private lazy val initialLoad = Random.nextInt(Integer.MAX_VALUE)
 
   startWith(Locked, DispenserData(initialLoad))
 
