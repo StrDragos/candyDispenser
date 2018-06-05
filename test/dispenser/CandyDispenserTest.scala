@@ -48,10 +48,15 @@ class CandyDispenserTest extends TestKit(ActorSystem("test"))
       actor.stateName shouldBe Locked
       expectNoMessage()
     }
-  }
 
-  "When dispenser is refilled" must {
-    "in locked sate and keep state" in new TestContext(10 seconds) {
+    "not got to unlock if there are no candies" in new TestContext(){
+      actor.setState(Locked, DispenserData(0, 1))
+      actor ! InsertCoin
+      actor.stateName shouldBe Locked
+      expectNoMessage()
+    }
+
+    "refill after a period of time" in new TestContext(10 seconds){
       actor.setState(Locked, DispenserData(0, 1))
       awaitCond(actor.stateData.numberOfCandies > 0, 11 seconds , 5 seconds)
       actor.stateName shouldBe Locked

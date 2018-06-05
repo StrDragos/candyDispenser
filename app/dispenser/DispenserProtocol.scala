@@ -1,9 +1,10 @@
 package dispenser
 
 object DispenserProtocol {
-  sealed trait DispenserInput
-  case object InsertCoin extends DispenserInput
-  case object RotateKnob extends DispenserInput
+  sealed trait DispenserMessage
+  case object InsertCoin extends DispenserMessage
+  case object RotateKnob extends DispenserMessage
+  case object GetInventory extends DispenserMessage
 
   case class Response(numberOfCandies:Int, insertedCoins: Int)
 }
