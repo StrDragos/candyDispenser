@@ -42,7 +42,7 @@ private[dispenser] class CandyDispenser(refillTime: FiniteDuration = 30 minutes)
   when(Unlocked, refillTime) {
     case Event(RotateKnob, data@DispenserData(candies, coins)) if candies > 0 =>
       val newState = data.copy(numberOfCandies = candies - 1)
-      sender() ! Response(newState.numberOfCandies, coins)
+      sender ! Response(newState.numberOfCandies, coins)
       goto(Locked) using newState
 
     case Event(StateTimeout, data) =>

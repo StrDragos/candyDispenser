@@ -11,11 +11,4 @@ libraryDependencies += guice
 libraryDependencies ++= Seq(
   "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test,
   "com.typesafe.akka" %% "akka-testkit" % "2.5.11" % Test
-
 )
-
-// Adds additional packages into Twirl
-//TwirlKeys.templateImports += "dragos.dispenser.controllers._"
-
-// Adds additional packages into conf/routes
-// play.sbt.routes.RoutesKeys.routesImport += "dragos.dispenser.binders._"
