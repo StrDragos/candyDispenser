@@ -1,0 +1,10 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
++nocsrf
+POST        /dispenser/insert-coin        controllers.CandyDispenser.inputCoin
+
++nocsrf
+POST        /dispenser/rotate-knob        controllers.CandyDispenser.rotateKnob
