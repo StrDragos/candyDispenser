@@ -1,1 +1,1 @@
-A quick implementation of a candy dispenser implemented with Akka FSM.
+A quick implementation of a candy dispenser using Akka FSM.
