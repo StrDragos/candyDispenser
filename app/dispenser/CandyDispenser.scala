@@ -21,8 +21,7 @@ object CandyDispenser {
   case object Unlocked extends DispenserState
 
 }
-
-private[dispenser] class CandyDispenser(refillTime: FiniteDuration = 30 minutes) extends FSM[DispenserState, DispenserData] {
+class CandyDispenser(refillTime: FiniteDuration = 30 minutes) extends FSM[DispenserState, DispenserData] {
 
   private lazy val initialLoad = Random.nextInt(Integer.MAX_VALUE)
 
