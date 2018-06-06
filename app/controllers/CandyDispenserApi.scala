@@ -9,12 +9,13 @@ import javax.inject.{Inject, Singleton}
 import play.api.libs.json._
 import play.api.mvc.{AbstractController, ControllerComponents}
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 
 
 @Singleton
-class CandyDispenserApi @Inject()(system: ActorSystem, cc: ControllerComponents) extends AbstractController(cc) {
+class CandyDispenserApi @Inject()(system: ActorSystem, cc: ControllerComponents)
+                                 (implicit ec: ExecutionContext) extends AbstractController(cc) {
   implicit val timeout: Timeout = 5 seconds
 
   private val candyDispenser = system.actorOf(dispenser.CandyDispenser.props, dispenser.CandyDispenser.name)
