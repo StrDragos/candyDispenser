@@ -3,6 +3,7 @@ package dispenser
 import akka.actor.{FSM, Props}
 import dispenser.CandyDispenser._
 import dispenser.DispenserProtocol._
+import javax.inject.{Inject, Named}
 
 import scala.concurrent.duration._
 import scala.util.Random
@@ -10,7 +11,7 @@ import scala.util.Random
 object CandyDispenser {
   val name = "candy-dispenser"
 
-  def props: Props = Props(new CandyDispenser())
+//  def props: Props = Props(new CandyDispenser())
 
   sealed trait DispenserState
 
@@ -21,8 +22,8 @@ object CandyDispenser {
   case object Unlocked extends DispenserState
 
 }
-class CandyDispenser(refillTime: FiniteDuration = 30 minutes) extends FSM[DispenserState, DispenserData] {
-
+class CandyDispenser @Inject()( @Named("dispenser.refillTime") refillTime: FiniteDuration) extends FSM[DispenserState, DispenserData] {
+//  val refillTime: FiniteDuration = 30 minutes
   private lazy val initialLoad = Random.nextInt(Integer.MAX_VALUE)
 
   startWith(Locked, DispenserData(initialLoad))

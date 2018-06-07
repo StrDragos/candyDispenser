@@ -1,13 +1,15 @@
 package controllers
 
-import akka.actor.ActorSystem
 import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 
-class CandyDispenserApiTest extends PlaySpec {
+class CandyDispenserApiTest extends PlaySpec with GuiceOneAppPerSuite {
 
-  "Api"  should {
-    "return index" in {
-      val controller = new CandyDispenserApi(ActorSystem("test"), )
+  "Api" should {
+    "get candy inventory" in {
+      route(app, FakeRequest(GET, "/dispenser/inventory")).map(status) mustBe Some(OK)
     }
   }
 
